@@ -1,0 +1,27 @@
+- only for MIMD , SPMD programs (not diff program per core; single executable behaving like multiple programs through conditional branches - single program that obtains parallelism by branching)
+easily be data-parallel and task-parallel (parallel by dividing tasks among its threads/ processes)
+
+if (I'm thread/process 0) // operate on first half of array
+else (I'm thread/process 1) // operate on second half
+
+want to minimize communication
+
+shared memory -- 
+dynamic threads: (master thread, fork, wait till all done)
++ efficient use of resources
++ thread creation and termination is time consming
+static threads: (all created and allocated, don't terminate until cleanup)
+
++ better performance
+- waste sys resources
+
+nondeterminism: race condition/ critical section/ mutually exclusive/ mutex, semaphore lock
+
+***** What is the relationship between cache coherence and nondeterminism? Isn’t cache coherence enough
+to ensure determinism? *****
+
+wanna make less communication, fair load balancing, manage synch
+
+foster's methodology - 1) partition: divide computation into small tasks, identify tasks that can be done in parallel; 2) determine communication amongst tasks above, 3) aggregate tasks and communications into larger tasks if needed; 4) assign each task to a process/thread
+
+

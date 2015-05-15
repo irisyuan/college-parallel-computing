@@ -1,0 +1,77 @@
+SISD von neumann:
+CPU
+.. 
+ALU (registers [data storage]) | control (registers)
+.. // data or instructions are fetched from memory to CPU, stored from CPU to memory
+main memory [address | contents] // collection of locations
+
+- von neumann bottleneck: separation of memory and CPU determines rate at which instructions & data can be accessed 
+
+
+an OS process: an instance of computer program in execution. contains **executable machine language program, **block of memory (executable, call stack with active functions, heap, etc), descriptor of resources, security, info on state of process
+a thread: divides within process 
+
+
+modifications to von neumann: 
+- cache, wider interconnection to transport more data, exploit temporal/spatial locality
+- L1 smallest/fastest, L2, L3 etc larger and slower w/ copies (ie. variable stored in both L1/L2)
+
+Write through cache: Any block updated in the cache is also updated in the lower level
+cache or the memory (if this cache is the last level one).
++: Always the lower level memory has the latest data, which makes coherence and
+some parallel constructs easier and faster.
+-: requires much higher bandwidth, which is a very scarce resource because of the
+contention that will occur on buses, ports, and chip pins (if memory is updated).
+Write back cache: the block is written back (if dirty) to the lower level cache or memo
+
+- Write back cache: the block is written back (if dirty) to the lower level cache or memory
+only if this block is replaced from the cache.
++: saves a lot of bandwidth
+-: Lower level memory does not always have the latest version of the data.
+
+
+multitasking: gives illusion single processor system (SISD/SIMD) is running multiple programs @ same time. each process takes turns - "time slice"
+
+- ILP offers faster throughput
+
+80s pipelining: temporary parallelism
+http://cs.stanford.edu/people/eroberts/courses/soco/projects/risc/pipelining/
+- works like an assembly line
+- work on different steps of the instruction at the same time so overall instruction executed in shorter period of time
+- laundry analogy with multiple loads: you'd overlap drying and washing diff loads instead of waiting for each load to wash & dry at a time
+- each stage CPI = 1 (number of stages with each generation)
+- enhancements: cache memory -> multi-level caches; virtual memory -> TLB
+
+
+90s ILP: spatial paralellism // speculative execution
+http://www.cs.iastate.edu/~prabhu/Tutorial/PIPELINE/instrLevParal.html
+- overlap independent instructions typically exploited across multiple blocks
+- common example: iteration of a loop where any iteration can overlap with any other iteration (although not within the loop iteration itself)
+
+- multiple issue: instead of assembly line, replicate functional units & try to simultaneously execute 
+(dynamic multiple issue = superscalar).
+- with speculation, compiler/ processor guesses instruction & executes instruction based on guess (inserts code whether speculation correct)
+- execute instructions out of order although instr still loaded in order
+
+2000s: SMT (simultaneous multithreading)
+
+
+** why did we move from single to multi core? **
+advantages of multicore:
+- reach higher performance without high clock frequency
+- exploit different types of parallelism with compiler + programmer support (task-level, data-level...)
+
+disadvantages of multicore:
+- hard to program
+- increase in number of cores means contention on shared resources (shared cache, interconnect, memory controller) 
+
+advantages of single core:
+- easier to program
+- can result in higher performance without more effort from programmer
+
+disadvantages of single core:
+- does not exploit parallelism (no shit)
+- does not scale in terms of performance
+
+
+hardware evolution has been driven by exploiting parallelism, dealing with memory (latency, capacity)

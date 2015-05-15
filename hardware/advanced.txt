@@ -1,0 +1,69 @@
+summary aspects of ILP: 
+http://stackoverflow.com/questions/1656608/what-is-difference-between-superscaling-and-pipelining
+
+- pipelining  (MISD)
+
+- superscalar  ---> SINGLE CORE PROCESSOR (SISD, SIMD) http://cs.stackexchange.com/questions/37758/why-is-a-superscalar-processor-simd
+
+- out of order execution
+"The benefit of OoOE processing grows as the instruction pipeline deepens and the speed difference between main memory (or cache memory) and the processor widens. On modern machines, the processor runs many times faster than the memory, so during the time an in-order processor spends waiting for data to arrive, it could have processed a large number of instructions."
+
+- speculative execution 
+"The ability to issue instructions past branches which have yet to resolve is known as speculative execution."
+
+- simultaneous multithreading improves superscalar with hardware multithreading ----> SMSD 
+"In simultaneous multithreading, instructions from more than one thread can be executed in any given pipeline stage at a time. This is done without great changes to the basic processor architecture: the main additions needed are the ability to fetch instructions from multiple threads in a cycle, and a larger register file to hold data from multiple threads. The number of concurrent threads can be decided by the chip designers. Two concurrent threads per CPU core are common, but some processors support eight concurrent threads per core."
+
+
+http://www-inst.eecs.berkeley.edu/~cs61c/su12/disc/Discussion9.pdf
+
+data vs instruction vs thread level parallelism
+
+*** compare & contrast ILP processor types with flynn's taxonomy processors ***
+
+SIMD:
+- gpu (kind of), vector processors
+- data parallelism: efficient for large data parallel problems but not more complex problems. must operate synchronously and all ALUs must execute same instruction or idle
+- apply same instruction to multiple data streams
+for (i = 0; i < n; i++)
+	x[i] += y[i]; // n data items, n ALUs for x[0], x[1] ... x[n], or divide n amongst ALUs
+
+- vector processors: operate on vectors instead of CPUs' individual data; use "interleaved memory" (multiple banks of memory that can be accessed independently, and distribute vector elements across banks.  reduce or eliminate delay
+in loading/storing successive elements.)
+= pro: fast, easy, high memory bandwidth (why?), leverage every item in cacheline
+= con: doesn't scale, doesn't handle irregular data structures well
+
+MIMD: independent processors connect to memory using interconnection network
+
+with UMA multicore, time to access all cores is same
+with NUMA multicore, (each with own cores, interconnect and memory connected by the cores) -- a memory location a core is directly connected to can be accessed faster than a memory location that must be accessed through another chip.
+with clusters distributed mem system, collection of nodes.
+CPU 	CPU 	CPU 	CPU
+..		..		..		..
+memory	memory	memory	memory
+..		..		..		..	
+separate interconnection-------------->
+
+dat interconnect : shared vs distributed
+- shared// bus interconnect: communication wires shared by devices connected; as # devices increase, contention for use of bus increases, performance decreases
+- shared, cross bar // switched interconnect: use switches to control routing of data; allows communication simultaneously amongst diff devices and faster than buses but cost of switches is still high so nope
+- distributed, direct: processor-memory pairs connected to switches
+- distributed, indirect: switches not directly connected to processor
+
+
+latency- time between source beginning transmit to destination receiving first byte
+bandwidth- rate at which dest receives data after that first byte
+message  transmission time = latency (s) + length of message (bytes) + bandwidth (bytes/s)
+
+cache coherence: Programmers have no control over caches and when they get updated
+snooping: cores share a bus. all signals on UPDATE, not read or write, connected to the bus. when shared variable updated by any core, any other core can mark its copy of that varaible as invalid
+- use directory data structure storing status of each cache line to update. directory: write-update; snoopy: write invalidate
+
+- communication & memory access are more expensive than computation
+- trend now is more cores per chip; non-bus interconnect; NUMA and NUCA
+*** can you defend why? ***
+
+
+
+
+
